@@ -12,16 +12,12 @@ const nums = '0123456789'
 const alphabet = katakana + latin + nums
 
 const fontSize = 16
-const columns = canvas.width / fontSize
+let columns = canvas.width / fontSize
 
 // create an array to store raindrops
-let drops = []
-// loop to create drops
-for (let i = 0; i < columns; i++) {
-  drops[i] = 1
-}
+let drops = Array.from({ length: columns }).fill(canvas.height)
 
-function draw() {
+function draw(context, canvas, fontSize, alphabet, drops) {
   // set background color as transparent black
   context.fillStyle = 'rgba(0, 0, 0, 0.05)'
   context.fillRect(0, 0, canvas.width, canvas.height)
@@ -37,5 +33,19 @@ function draw() {
     drops[i]++
   }
 }
+let interval = null
+interval = setInterval(() => {
+  draw(context, canvas, fontSize, alphabet, drops)
+}, 100)
 
-setInterval(draw, 30)
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+  columns = canvas.width / fontSize
+
+  drops = Array.from({ length: columns }).fill(canvas.height)
+  clearInterval(interval)
+  interval = setInterval(() => {
+    draw(context, canvas, fontSize, alphabet, drops)
+  }, 30)
+})
